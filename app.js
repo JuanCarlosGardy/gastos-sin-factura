@@ -693,8 +693,6 @@ function renderReport(label, start, end, rows){
   `).join("");
 
   const catsHtml = cats.map(([k,v])=> `<li><strong>${k}:</strong> ${euro(v)}</li>`).join("");
-  const provsHtml = provs.slice(0, 12).map(([k,v])=> `<li><strong>${k}:</strong> ${euro(v)}</li>`).join("");
-
 const provsHtml = provs.map(([k,v])=> `
 <tr>
 <td>${k}</td>
