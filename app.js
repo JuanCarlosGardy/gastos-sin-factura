@@ -375,6 +375,7 @@ function fillCategorySelect(selected){
 }
 
 $("#btnNewExpense").addEventListener("click", ()=>{
+  editingExpenseId = null;
   $("#expenseForm").classList.remove("hidden");
   $("#eDate").value = ymd(new Date());
   $("#eProvider").value = "";
@@ -417,30 +418,53 @@ $("#btnSaveExpense").addEventListener("click", async ()=>{
 
   const provider = providersCache.find(x => x.id === providerId);
   if(!provider) return setMsg($("#expenseMsg"), "Proveedor no válido.", "err");
-
+const isEditing = !!editingExpenseId;
   try{
-    const num = await nextExpenseNumber(dateYmd);
+    if(isEditing){
+  // EDITAR: no se toca el número
+  const refDoc = doc(db, "users", uid, "expenses", editingExpenseId);
 
-    const data = {
-      number: num,
-      dateYmd,
-      providerId,
-      providerName: provider.name || "",
-      category,
-      reference: refText,
-      amount,
-      notes: $("#eNotes").value.trim(),
-      payMethod: $("#ePay").value,
-      createdAt: serverTimestamp(),
-      ownerUid: uid
-    };
+  await updateDoc(refDoc, {
+    dateYmd,
+    providerId,
+    providerName: provider.name || "",
+    category,
+    reference: refText,
+    amount,
+    notes: $("#eNotes").value.trim(),
+    payMethod: $("#ePay").value,
+    updatedAt: serverTimestamp()
+  });
 
-    await addDoc(colExpenses(), data);
+  setMsg($("#expenseMsg"), "Gasto actualizado.", "ok");
+}else{
+  // CREAR: genera número único
+  const num = await nextExpenseNumber(dateYmd);
 
-    $("#eNumberPreview").value = num;
-    setMsg($("#expenseMsg"), `Gasto guardado con número ${num}.`, "ok");
-    $("#expenseForm").classList.add("hidden");
-    await loadExpensesList();
+  const data = {
+    number: num,
+    dateYmd,
+    providerId,
+    providerName: provider.name || "",
+    category,
+    reference: refText,
+    amount,
+    notes: $("#eNotes").value.trim(),
+    payMethod: $("#ePay").value,
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    ownerUid: uid
+  };
+
+  await addDoc(colExpenses(), data);
+
+  $("#eNumberPreview").value = num;
+  setMsg($("#expenseMsg"), `Gasto guardado con número ${num}.`, "ok");
+}
+
+$("#expenseForm").classList.add("hidden");
+await loadExpensesList();
   }catch(e){
     setMsg($("#expenseMsg"), "Error guardando gasto.", "err");
   }
