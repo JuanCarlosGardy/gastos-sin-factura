@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gastos sin factura - Restaurante</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brandTitle">Control interno — Gastos sin factura</div>
+      <div class="brandSub">Restaurante</div>
+    </div>
+
+    <div class="topActions">
+      <button id="btnPrint" class="btn ghost">Imprimir</button>
+      <button id="btnLogout" class="btn danger">Salir</button>
+    </div>
+  </header>
+
+  <!-- LOGIN -->
+  <main id="viewLogin" class="container">
+    <section class="card">
+      <h1>Acceso</h1>
+      <p class="muted">Usa un usuario único para que Mac e iPhone vean lo mismo.</p>
+
+      <div class="grid2">
+        <label>
+          Email
+          <input id="loginEmail" type="email" placeholder="correo@empresa.com" autocomplete="username" />
+        </label>
+        <label>
+          Contraseña
+          <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" />
+        </label>
+      </div>
+
+      <div class="row">
+        <button id="btnLogin" class="btn">Entrar</button>
+        <button id="btnCreateUser" class="btn secondary">Crear usuario</button>
+      </div>
+
+      <div id="loginMsg" class="msg"></div>
+      <p class="muted small">
+        Nota: "Crear usuario" se usa solo la primera vez. Después, siempre "Entrar".
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>1 vez: Configuración Firebase</h2>
+      <p class="muted">En <code>app.js</code> pega tu <code>firebaseConfig</code> (te indico exactamente dónde).</p>
+    </section>
+  </main>
+
+  <!-- APP -->
+  <main id="viewApp" class="container hidden">
+    <nav class="tabs">
+      <button class="tab active" data-tab="providers">Proveedores</button>
+      <button class="tab" data-tab="expenses">Gastos</button>
+      <button class="tab" data-tab="reports">Informes</button>
+    </nav>
+
+    <!-- PROVEEDORES -->
+    <section id="tabProviders" class="card">
+      <div class="cardHead">
+        <h1>Proveedores</h1>
+        <div class="row">
+          <button id="btnNewProvider" class="btn">Nuevo proveedor</button>
+        </div>
+      </div>
+
+      <div id="providerForm" class="subcard hidden">
+        <h2 id="providerFormTitle">Alta proveedor</h2>
+
+        <div class="grid2">
+          <label>
+            Nombre proveedor (obligatorio)
+            <input id="pName" type="text" placeholder="Ej: Distribuciones X" />
+          </label>
+          <label>
+            Contacto (opcional)
+            <input id="pContact" type="text" placeholder="Ej: Juan / Marta" />
+          </label>
+          <label>
+            Teléfono (opcional)
+            <input id="pPhone" type="tel" placeholder="Ej: 600000000" />
+          </label>
+          <label>
+            Email (opcional)
+            <input id="pEmail" type="email" placeholder="Ej: proveedor@..." />
+          </label>
+        </div>
+
+        <div class="divider"></div>
+
+        <h3>Servicios / Productos que ofrece</h3>
+        <div id="categoryChecks" class="checks"></div>
+
+        <div class="row">
+          <button id="btnSaveProvider" class="btn">Guardar proveedor</button>
+          <button id="btnCancelProvider" class="btn ghost">Cancelar</button>
+        </div>
+
+        <div id="providerMsg" class="msg"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <input id="providerSearch" class="search" type="search" placeholder="Buscar proveedor..." />
+      <div id="providersList" class="list"></div>
+    </section>
+
+    <!-- GASTOS -->
+    <section id="tabExpenses" class="card hidden">
+      <div class="cardHead">
+        <h1>Gastos sin factura</h1>
+        <div class="row">
+          <button id="btnNewExpense" class="btn">Nuevo gasto</button>
+        </div>
+      </div>
+
+      <div id="expenseForm" class="subcard hidden">
+        <h2>Alta gasto</h2>
+
+        <div class="grid2">
+          <label>
+            Fecha
+            <input id="eDate" type="date" />
+          </label>
+
+          <label>
+            Proveedor
+            <select id="eProvider"></select>
+          </label>
+
+          <label>
+            Categoría
+            <select id="eCategory"></select>
+          </label>
+
+          <label>
+            Importe (€)
+            <input id="eAmount" type="number" step="0.01" placeholder="0,00" />
+          </label>
+        </div>
+
+        <label>
+          Referencia / Concepto
+          <input id="eRef" type="text" placeholder="Ej: hielo 4 sacos / reparación campana" />
+        </label>
+
+        <label>
+          Notas (opcional)
+          <textarea id="eNotes" rows="3" placeholder="Detalle interno..."></textarea>
+        </label>
+
+        <div class="grid2">
+          <label>
+            Método de pago (opcional)
+            <select id="ePay">
+              <option value="">—</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="tarjeta">Tarjeta</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+          <label>
+            Número (se genera al guardar)
+            <input id="eNumberPreview" type="text" disabled placeholder="SF-AAAA-000000" />
+          </label>
+        </div>
+
+        <div class="row">
+          <button id="btnSaveExpense" class="btn">Guardar gasto</button>
+          <button id="btnCancelExpense" class="btn ghost">Cancelar</button>
+        </div>
+
+        <div id="expenseMsg" class="msg"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="grid2">
+        <input id="expenseSearch" class="search" type="search" placeholder="Buscar por proveedor / referencia..." />
+        <select id="expenseQuickFilter">
+          <option value="all">Ver: Todo</option>
+          <option value="m0">Este mes</option>
+          <option value="q0">Este trimestre</option>
+        </select>
+      </div>
+
+      <div id="expensesList" class="list"></div>
+    </section>
+
+    <!-- INFORMES -->
+    <section id="tabReports" class="card hidden">
+      <div class="cardHead">
+        <h1>Informes</h1>
+      </div>
+
+      <div class="grid2">
+        <label>
+          Tipo
+          <select id="rType">
+            <option value="month">Mensual</option>
+            <option value="quarter">Trimestral</option>
+          </select>
+        </label>
+
+        <label>
+          Año
+          <input id="rYear" type="number" min="2020" step="1" />
+        </label>
+
+        <label id="wrapMonth">
+          Mes
+          <select id="rMonth">
+            <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+            <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+            <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option>
+            <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+        </label>
+
+        <label id="wrapQuarter" class="hidden">
+          Trimestre
+          <select id="rQuarter">
+            <option value="1">T1 (Ene-Mar)</option>
+            <option value="2">T2 (Abr-Jun)</option>
+            <option value="3">T3 (Jul-Sep)</option>
+            <option value="4">T4 (Oct-Dic)</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <button id="btnRunReport" class="btn">Generar informe</button>
+        <button id="btnExportCsv" class="btn secondary">Exportar CSV</button>
+      </div>
+
+      <div id="reportArea" class="report"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="muted small">Control interno — Gastos sin factura</div>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
