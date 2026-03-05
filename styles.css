@@ -227,6 +227,21 @@ textarea{ resize:vertical; }
 @media print{
   body{ background:#fff; color:#000; }
   .topbar, .tabs, .footer, #btnLogout, #btnPrint { display:none !important; }
+    /* Ocultar controles de filtros en Informes */
+  #tabReports .grid2,
+  #tabReports .row,
+  #tabReports label,
+  #tabReports select,
+  #tabReports input,
+  #btnRunReport,
+  #btnExportCsv{
+    display:none !important;
+  }
+
+  /* Dejar solo el área del informe */
+  #reportArea{
+    display:block !important;
+  }
   .container{ width: 100%; margin:0; }
   .card{ box-shadow:none; border: none; }
   input, select, textarea{ border:1px solid #ddd; color:#000; background:#fff; }
