@@ -112,6 +112,9 @@ let uid = null;
 let providersCache = []; // {id, name, categories[] ...}
 let lastReportRows = []; // para export CSV
 let editingExpenseId = null;
+let lastReportProviders = []; // [[proveedor, total], ...] para export agrupado
+let lastReportLabel = "";
+let lastReportTotal = 0;
 
 // =============================
 // 5) AUTH UI
@@ -677,7 +680,9 @@ function renderReport(label, start, end, rows){
     byCat.set(r.category || "—", (byCat.get(r.category || "—") || 0) + a);
     byProv.set(r.providerName || "—", (byProv.get(r.providerName || "—") || 0) + a);
   }
-
+lastReportLabel = label;
+lastReportTotal = total;
+lastReportProviders = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
   const cats = Array.from(byCat.entries()).sort((a,b)=> b[1]-a[1]);
   const provs = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
 
@@ -748,23 +753,25 @@ ${provsHtml}
 }
 
 $("#btnExportCsv").addEventListener("click", ()=>{
-  if(!lastReportRows || lastReportRows.length === 0){
+  if(!lastReportProviders || lastReportProviders.length === 0){
     return;
   }
-  const header = ["Fecha","Numero","Proveedor","Categoria","Referencia","Importe","Pago","Notas"];
-  const rows = lastReportRows.map(r => ([
-    r.dateYmd || "",
-    r.number || "",
-    r.providerName || "",
-    r.category || "",
-    r.reference || "",
-    String(r.amount ?? ""),
-    r.payMethod || "",
-    r.notes || ""
+
+  const header = ["Proveedor","Importe"];
+  const rows = lastReportProviders.map(([prov, total])=> ([
+    prov,
+    String(total ?? 0)
   ].map(csvEscape).join(";")));
 
-  const content = [header.join(";"), ...rows].join("\n");
-  downloadText("informe_gastos_sin_factura.csv", content);
+  // Añadimos cabecera informativa arriba (opcional pero útil)
+  const info = [
+    `${csvEscape(lastReportLabel || "Informe")}`,
+    `TOTAL;${csvEscape(String(lastReportTotal ?? 0))}`,
+    ""
+  ].join("\n");
+
+  const content = info + header.join(";") + "\n" + rows.join("\n");
+  downloadText("informe_gastos_sin_factura_por_proveedor.csv", content);
 });
 
 // =============================
