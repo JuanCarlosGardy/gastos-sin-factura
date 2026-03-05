@@ -708,7 +708,8 @@ const provsHtml = provs.map(([k,v])=> `
 $("#reportArea").innerHTML = `
 
 <div class="item">
-<div><strong>${label}</strong></div>
+<div style="font-size:18px"><strong>GASTOS SIN FACTURA</strong></div>
+<div class="muted" style="margin-top:2px">Informe interno – ${label}</div>
 <div class="kv">
 <span>Rango: ${start} a ${ymd(new Date(new Date(end).getTime()-86400000))}</span>
 <span>Total gastos: <strong>${euro(total)}</strong></span>
