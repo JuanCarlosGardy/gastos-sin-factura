@@ -373,9 +373,13 @@ function fillCategorySelect(selected){
     sel.appendChild(o);
   }
 }
-
+function setExpenseFormMode(isEditing, number=""){
+  $("#expenseFormTitle").textContent = isEditing ? "Editar gasto" : "Alta gasto";
+  $("#expenseEditHint").textContent = isEditing ? `Editando: ${number || ""}` : "";
+}
 $("#btnNewExpense").addEventListener("click", ()=>{
   editingExpenseId = null;
+  setExpenseFormMode(false);
   $("#expenseForm").classList.remove("hidden");
   $("#eDate").value = ymd(new Date());
   $("#eProvider").value = "";
@@ -389,9 +393,16 @@ $("#btnNewExpense").addEventListener("click", ()=>{
 });
 
 $("#btnCancelExpense").addEventListener("click", ()=>{
+ editingExpenseId = null;
+setExpenseFormMode(false);
   $("#expenseForm").classList.add("hidden");
 });
-
+$("#btnCancelEditExpense").addEventListener("click", ()=>{
+  editingExpenseId = null;
+  $("#eNumberPreview").value = "";
+  setExpenseFormMode(false);
+  setMsg($("#expenseMsg"), "Edición cancelada. Puedes crear un gasto nuevo.", "ok");
+});
 $("#eProvider").addEventListener("change", ()=>{
   const pid = $("#eProvider").value;
   const p = providersCache.find(x => x.id === pid);
@@ -581,7 +592,7 @@ el.innerHTML = `
     $("#eNotes").value = e.notes || "";
     $("#ePay").value = e.payMethod || "";
     $("#eNumberPreview").value = e.number || "";
-
+setExpenseFormMode(true, e.number || "");
     setMsg($("#expenseMsg"), "", "");
   });
 });
