@@ -695,8 +695,6 @@ function renderReport(label, start, end, rows){
   const catsHtml = cats.map(([k,v])=> `<li><strong>${k}:</strong> ${euro(v)}</li>`).join("");
   const provsHtml = provs.slice(0, 12).map(([k,v])=> `<li><strong>${k}:</strong> ${euro(v)}</li>`).join("");
 
- const provs = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
-
 const provsHtml = provs.map(([k,v])=> `
 <tr>
 <td>${k}</td>
