@@ -111,6 +111,7 @@ const CATEGORIES = [
 let uid = null;
 let providersCache = []; // {id, name, categories[] ...}
 let lastReportRows = []; // para export CSV
+let editingExpenseId = null;
 
 // =============================
 // 5) AUTH UI
@@ -452,7 +453,21 @@ async function loadExpensesList(){
   const all = snap.docs.map(d => ({ id:d.id, ...d.data() }));
   renderExpensesList(all);
 }
+async function voidExpense(expenseId){
+  // Anular (recomendado): no borra, marca estado y deja rastro
+  const ref = doc(db, "users", uid, "expenses", expenseId);
+  await updateDoc(ref, {
+    status: "void",
+    voidedAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  });
+}
 
+async function hardDeleteExpense(expenseId){
+  // Borrado real (si alguna vez lo necesitas)
+  const ref = doc(db, "users", uid, "expenses", expenseId);
+  await deleteDoc(ref);
+}
 function renderExpensesList(all){
   const term = $("#expenseSearch").value.trim().toLowerCase();
   const quick = $("#expenseQuickFilter").value;
