@@ -531,25 +531,74 @@ function renderExpensesList(all){
   for(const e of rows){
     const el = document.createElement("div");
     el.className = "item";
-    el.innerHTML = `
-      <div class="itemHead">
-        <div>
-          <div><strong>${e.number || "—"}</strong> — ${e.providerName || "—"}</div>
-          <div class="kv">
-            <span>Fecha: ${e.dateYmd || "—"}</span>
-            <span>Categoría: ${e.category || "—"}</span>
-            <span>Importe: ${euro(e.amount)}</span>
-          </div>
-          <div class="kv">
-            <span>Ref: ${e.reference || "—"}</span>
-            <span>Pago: ${e.payMethod || "—"}</span>
-          </div>
-        </div>
-        <div class="badge">${euro(e.amount)}</div>
+    const isVoid = (e.status === "void");
+
+el.innerHTML = `
+  <div class="itemHead">
+    <div>
+      <div>
+        <strong>${e.number || "—"}</strong> — ${e.providerName || "—"}
+        ${isVoid ? `<span class="badge" style="margin-left:8px">ANULADO</span>` : ``}
       </div>
-    `;
+
+      <div class="kv">
+        <span>Fecha: ${e.dateYmd || "—"}</span>
+        <span>Categoría: ${e.category || "—"}</span>
+        <span>Importe: ${euro(e.amount)}</span>
+      </div>
+
+      <div class="kv">
+        <span>Ref: ${e.reference || "—"}</span>
+        <span>Pago: ${e.payMethod || "—"}</span>
+      </div>
+    </div>
+
+    <div style="display:grid; gap:8px; justify-items:end">
+      <div class="badge">${euro(e.amount)}</div>
+      <div class="row" style="margin-top:0">
+        <button class="btn ghost" data-eedit="${e.id}" ${isVoid ? "disabled" : ""}>Editar</button>
+        <button class="btn danger" data-evoid="${e.id}" ${isVoid ? "disabled" : ""}>Anular</button>
+      </div>
+    </div>
+  </div>
+`;
     list.appendChild(el);
   }
+  list.querySelectorAll("button[data-eedit]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const id = btn.dataset.eedit;
+    const e = rows.find(x => x.id === id);
+    if(!e) return;
+
+    editingExpenseId = id;
+    $("#expenseForm").classList.remove("hidden");
+
+    $("#eDate").value = e.dateYmd || ymd(new Date());
+    $("#eProvider").value = e.providerId || "";
+    fillCategorySelect(e.category || "");
+    $("#eAmount").value = String(e.amount ?? "");
+    $("#eRef").value = e.reference || "";
+    $("#eNotes").value = e.notes || "";
+    $("#ePay").value = e.payMethod || "";
+    $("#eNumberPreview").value = e.number || "";
+
+    setMsg($("#expenseMsg"), "", "");
+  });
+});
+
+list.querySelectorAll("button[data-evoid]").forEach(btn=>{
+  btn.addEventListener("click", async ()=>{
+    const id = btn.dataset.evoid;
+    const e = rows.find(x => x.id === id);
+    if(!e) return;
+
+    const ok = confirm(`¿Seguro que quieres ANULAR el gasto ${e.number}?\n\nNo se borrará: quedará marcado como ANULADO para control interno.`);
+    if(!ok) return;
+
+    await voidExpense(id);
+    await loadExpensesList();
+  });
+});
 }
 
 $("#expenseSearch").addEventListener("input", ()=> loadExpensesList());
