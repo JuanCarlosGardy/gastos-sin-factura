@@ -695,44 +695,60 @@ function renderReport(label, start, end, rows){
   const catsHtml = cats.map(([k,v])=> `<li><strong>${k}:</strong> ${euro(v)}</li>`).join("");
   const provsHtml = provs.slice(0, 12).map(([k,v])=> `<li><strong>${k}:</strong> ${euro(v)}</li>`).join("");
 
-  $("#reportArea").innerHTML = `
-    <div class="item">
-      <div><strong>${label}</strong></div>
-      <div class="kv">
-        <span>Rango: ${start} a ${ymd(new Date(new Date(end).getTime()-86400000))}</span>
-        <span>Nº registros: ${rows.length}</span>
-        <span>Total: <strong>${euro(total)}</strong></span>
-      </div>
-    </div>
+ const provs = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
 
-    <div class="grid2" style="margin-top:10px">
-      <div class="item">
-        <div><strong>Totales por categoría</strong></div>
-        <ul>${catsHtml || "<li>—</li>"}</ul>
-      </div>
-      <div class="item">
-        <div><strong>Top proveedores (hasta 12)</strong></div>
-        <ul>${provsHtml || "<li>—</li>"}</ul>
-      </div>
-    </div>
+const provsHtml = provs.map(([k,v])=> `
+<tr>
+<td>${k}</td>
+<td style="text-align:right">${euro(v)}</td>
+</tr>
+`).join("");
 
-    <div class="item" style="margin-top:10px; overflow:auto">
-      <div><strong>Detalle</strong></div>
-      <table style="width:100%; border-collapse:collapse; margin-top:8px">
-        <thead>
-          <tr>
-            <th style="text-align:left; border-bottom:1px solid var(--line); padding:6px">Fecha</th>
-            <th style="text-align:left; border-bottom:1px solid var(--line); padding:6px">Nº</th>
-            <th style="text-align:left; border-bottom:1px solid var(--line); padding:6px">Proveedor</th>
-            <th style="text-align:left; border-bottom:1px solid var(--line); padding:6px">Categoría</th>
-            <th style="text-align:left; border-bottom:1px solid var(--line); padding:6px">Referencia</th>
-            <th style="text-align:right; border-bottom:1px solid var(--line); padding:6px">Importe</th>
-          </tr>
-        </thead>
-        <tbody>${lines || ""}</tbody>
-      </table>
-    </div>
-  `;
+$("#reportArea").innerHTML = `
+
+<div class="item">
+<div><strong>${label}</strong></div>
+<div class="kv">
+<span>Rango: ${start} a ${ymd(new Date(new Date(end).getTime()-86400000))}</span>
+<span>Total gastos: <strong>${euro(total)}</strong></span>
+</div>
+</div>
+
+<div class="item" style="margin-top:10px">
+
+<div><strong>Gastos agrupados por proveedor</strong></div>
+
+<table style="width:100%; border-collapse:collapse; margin-top:10px">
+
+<thead>
+<tr>
+<th style="text-align:left;border-bottom:1px solid var(--line);padding:6px">
+Proveedor
+</th>
+
+<th style="text-align:right;border-bottom:1px solid var(--line);padding:6px">
+Importe
+</th>
+</tr>
+</thead>
+
+<tbody>
+${provsHtml}
+</tbody>
+
+<tfoot>
+<tr>
+<td style="padding:8px;border-top:2px solid var(--line)"><strong>TOTAL</strong></td>
+<td style="padding:8px;text-align:right;border-top:2px solid var(--line)">
+<strong>${euro(total)}</strong>
+</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+`;
 }
 
 $("#btnExportCsv").addEventListener("click", ()=>{
