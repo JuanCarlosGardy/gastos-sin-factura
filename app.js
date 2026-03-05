@@ -640,7 +640,6 @@ $("#btnRunReport").addEventListener("click", async ()=>{
 
   const qy = query(
   colExpenses(),
-  where("status", "==", "active"),
   where("dateYmd", ">=", start),
   where("dateYmd", "<", end),
   orderBy("dateYmd", "asc"),
@@ -649,8 +648,9 @@ $("#btnRunReport").addEventListener("click", async ()=>{
 
   const snap = await getDocs(qy);
   const rows = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-
-  renderReport(label, start, end, rows);
+  const rowsActive = rows.filter(r => r.status !== "void"); // incluye status undefined
+renderReport(label, start, end, rowsActive);
+return;
 });
 
 function renderReport(label, start, end, rows){
