@@ -639,12 +639,13 @@ $("#btnRunReport").addEventListener("click", async ()=>{
   }
 
   const qy = query(
-    colExpenses(),
-    where("dateYmd", ">=", start),
-    where("dateYmd", "<", end),
-    orderBy("dateYmd", "asc"),
-    orderBy("number", "asc")
-  );
+  colExpenses(),
+  where("status", "==", "active"),
+  where("dateYmd", ">=", start),
+  where("dateYmd", "<", end),
+  orderBy("dateYmd", "asc"),
+  orderBy("number", "asc")
+);
 
   const snap = await getDocs(qy);
   const rows = snap.docs.map(d => ({ id:d.id, ...d.data() }));
