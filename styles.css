@@ -402,3 +402,77 @@ textarea{ resize:vertical; }
   border-bottom:none;
   padding-top:10px;
 }
+.report-screen{
+  display:block;
+}
+
+.report-print{
+  display:none;
+}
+
+.print-title{
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:4px;
+  color:#000;
+}
+
+.print-subtitle{
+  font-size:14px;
+  margin-bottom:6px;
+  color:#000;
+}
+
+.print-meta{
+  font-size:12px;
+  margin-bottom:12px;
+  color:#000;
+}
+
+.print-concepts{
+  margin-bottom:14px;
+}
+
+.print-concepts-title{
+  font-weight:700;
+  margin-bottom:6px;
+  color:#000;
+}
+
+.print-concepts ul{
+  margin:0;
+  padding-left:18px;
+  color:#000;
+}
+
+.print-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:11px;
+}
+
+.print-table th,
+.print-table td{
+  padding:5px 6px;
+  border-bottom:1px solid #999;
+  color:#000;
+  vertical-align:top;
+}
+
+.print-table th{
+  text-align:left;
+  font-weight:700;
+}
+
+.print-table thead{
+  display:table-header-group;
+}
+
+.print-table tfoot{
+  display:table-footer-group;
+}
+
+.print-table tr{
+  page-break-inside:avoid;
+  break-inside:avoid;
+}
