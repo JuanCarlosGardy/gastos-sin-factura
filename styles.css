@@ -251,74 +251,83 @@ textarea{ resize:vertical; }
   input, select, textarea{ border:1px solid #ddd; color:#000; background:#fff; }
   .report{ border:1px solid #ddd; }
     /* Forzar impresión limpia del informe */
-  #reportArea,
-  #reportArea .item,
-  .report-highlight{
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
+  #reportArea{
+  overflow: visible !important;
+}
+
+.report-highlight{
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+#reportArea .item{
+  page-break-inside: auto !important;
+  break-inside: auto !important;
+}
 
   #reportArea{
     overflow: visible !important;
   }
 
   #reportArea table{
-    width:100% !important;
-    font-size:12px !important;
-  }
+  width:100% !important;
+  font-size:11px !important;
+  border-collapse:collapse !important;
+}
 
-  #reportArea th,
-  #reportArea td{
-    padding:6px !important;
-    color:#000 !important;
-  }
+ #reportArea th,
+#reportArea td{
+  padding:4px 6px !important;
+  color:#000 !important;
+  vertical-align:top !important;
+}
 
   .report-highlight,
-  .report-highlight-title,
-  .report-highlight-list,
-  .report-highlight-list li,
-  .report-highlight-list strong{
-    color:#000 !important;
-    background:#fff !important;
-  }
+.report-highlight-title,
+.report-highlight-list,
+.report-highlight-list li,
+.report-highlight-list strong{
+  color:#000 !important;
+}
 
-  .report-highlight{
-    border:1px solid #000 !important;
-    border-left:4px solid #000 !important;
-  }
+ .report-highlight{
+  border:1px solid #000 !important;
+  border-left:4px solid #000 !important;
+  background:#fff !important;
+}
 
   .item{
     overflow: visible !important;
   }
 }
 .report-highlight{
-  border:1px solid #d9d9d9;
-  border-left:4px solid #333;
+  border:1px solid var(--line);
+  border-left:4px solid var(--accent);
   padding:12px 14px;
   margin-top:12px;
-  background:#fafafa;
-  color:#111 !important;
+  background:rgba(255,255,255,0.03);
+  color:var(--text) !important;
   page-break-inside: avoid;
   break-inside: avoid;
+  border-radius:14px;
 }
-
 .report-highlight-title{
   font-weight:700;
   margin-bottom:8px;
-  color:#111 !important;
+  color:var(--text) !important;
 }
 
 .report-highlight-list{
   margin:0;
   padding-left:18px;
-  color:#111 !important;
+  color:var(--text) !important;
 }
 
 .report-highlight-list li{
-  color:#111 !important;
+  color:var(--text) !important;
   margin-bottom:4px;
 }
 
 .report-highlight-list strong{
-  color:#111 !important;
+  color:var(--text) !important;
 }
