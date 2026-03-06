@@ -337,6 +337,54 @@ textarea{ resize:vertical; }
     border-top:2px solid #000 !important;
     border-bottom:none !important;
   }
+    .report-screen{
+    display:none !important;
+  }
+
+  .report-print{
+    display:block !important;
+  }
+
+  #reportArea{
+    display:block !important;
+    overflow:visible !important;
+  }
+
+  #reportArea .item,
+  .report-highlight{
+    display:none !important;
+  }
+
+  .print-table{
+    width:100% !important;
+    border-collapse:collapse !important;
+    font-size:11px !important;
+  }
+
+  .print-table th,
+  .print-table td{
+    color:#000 !important;
+    padding:4px 6px !important;
+    border-bottom:1px solid #999 !important;
+  }
+
+  .print-table tfoot td{
+    border-top:2px solid #000 !important;
+    border-bottom:none !important;
+  }
+
+  .print-table thead{
+    display:table-header-group !important;
+  }
+
+  .print-table tfoot{
+    display:table-footer-group !important;
+  }
+
+  .print-table tr{
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+  }
 }
 .report-highlight{
   border:1px solid var(--line);
