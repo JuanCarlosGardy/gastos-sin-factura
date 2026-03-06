@@ -711,6 +711,8 @@ function renderReport(label, start, end, rows){
   const endDisplay = ymd(new Date(new Date(end).getTime() - 86400000));
 
   const reportHtml = `
+  <!-- VISTA PANTALLA -->
+  <div class="report-screen">
     <div class="item">
       <div style="font-size:18px"><strong>GASTOS SIN FACTURA</strong></div>
       <div class="muted" style="margin-top:2px">Informe interno – ${label}</div>
@@ -752,8 +754,44 @@ function renderReport(label, start, end, rows){
         </tfoot>
       </table>
     </div>
-  `;
+  </div>
 
+  <!-- VISTA IMPRESIÓN -->
+  <div class="report-print">
+    <div class="print-title">GASTOS SIN FACTURA</div>
+    <div class="print-subtitle">Informe interno – ${label}</div>
+    <div class="print-meta">
+      Rango: ${start} a ${endDisplay} | Total gastos: ${euro(total)}
+    </div>
+
+    <div class="print-concepts">
+      <div class="print-concepts-title">Conceptos con mayor gasto</div>
+      <ul>
+        ${topConceptsHtml || "<li>—</li>"}
+      </ul>
+    </div>
+
+    <table class="print-table">
+      <thead>
+        <tr>
+          <th>Proveedor</th>
+          <th style="text-align:right">Importe</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        ${provsHtml}
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td><strong>TOTAL</strong></td>
+          <td style="text-align:right"><strong>${euro(total)}</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+`;
   $("#reportArea").innerHTML = reportHtml;
 }
 
