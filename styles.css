@@ -247,3 +247,20 @@ textarea{ resize:vertical; }
   input, select, textarea{ border:1px solid #ddd; color:#000; background:#fff; }
   .report{ border:1px solid #ddd; }
 }
+.report-highlight{
+  border:1px solid #d9d9d9;
+  border-left:4px solid #333;
+  padding:12px 14px;
+  margin-top:12px;
+  background:#fafafa;
+}
+
+.report-highlight-title{
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+.report-highlight-list{
+  margin:0;
+  padding-left:18px;
+}
