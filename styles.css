@@ -225,6 +225,10 @@ textarea{ resize:vertical; }
 
 /* IMPRESIÓN */
 @media print{
+  .report-highlight{
+  border:1px solid #000;
+  background:#fff;
+}
   body{ background:#fff; color:#000; }
   .topbar, .tabs, .footer, #btnLogout, #btnPrint { display:none !important; }
     /* Ocultar controles de filtros en Informes */
