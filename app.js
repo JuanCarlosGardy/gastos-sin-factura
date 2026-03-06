@@ -709,13 +709,28 @@ const provsHtml = provs.map(([k,v])=> `
 </tr>
 `).join("");
 
-$("#reportArea").innerHTML = `
-<div class="item">
-<div style="font-size:18px"><strong>GASTOS SIN FACTURA</strong></div>
-<div class="muted" style="margin-top:2px">Informe interno – ${label}</div>
-<div class="kv">
-<span>Rango: ${start} a ${ymd(new Date(new Date(end).getTime()-86400000))}</span>
-<span>Total gastos: <strong>${euro(total)}</strong></span>
+<div class="report-table-wrap">
+  <div class="report-table-title"><strong>Gastos agrupados por proveedor</strong></div>
+
+  <table class="report-table-main">
+    <thead>
+      <tr>
+        <th>Proveedor</th>
+        <th style="text-align:right">Importe</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      ${provsHtml}
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <td><strong>TOTAL</strong></td>
+        <td style="text-align:right"><strong>${euro(total)}</strong></td>
+      </tr>
+    </tfoot>
+  </table>
 </div>
 <div class="report-highlight">
   <div class="report-highlight-title">Conceptos con mayor gasto</div>
