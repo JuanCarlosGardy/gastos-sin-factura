@@ -51,7 +51,13 @@ function euro(n){
   const x = Number(n || 0);
   return x.toLocaleString("es-ES", { style:"currency", currency:"EUR" });
 }
-
+function pct(part, total){
+  const p = total ? (Number(part || 0) / Number(total || 0)) * 100 : 0;
+  return p.toLocaleString("es-ES", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
+  }) + "%";
+}
 function ymd(d){
   const dt = d instanceof Date ? d : new Date(d);
   const mm = String(dt.getMonth()+1).padStart(2,"0");
@@ -694,11 +700,12 @@ function renderReport(label, start, end, rows){
   lastReportProviders = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
 
   const provsHtml = lastReportProviders.map(([k,v]) => `
-    <tr>
-      <td style="padding:8px 10px; border-bottom:1px solid var(--line);">${k}</td>
-      <td style="padding:8px 10px; border-bottom:1px solid var(--line); text-align:right;">${euro(v)}</td>
-    </tr>
-  `).join("");
+  <tr>
+    <td style="padding:8px 10px; border-bottom:1px solid var(--line);">${k}</td>
+    <td style="padding:8px 10px; border-bottom:1px solid var(--line); text-align:right;">${euro(v)}</td>
+    <td style="padding:8px 10px; border-bottom:1px solid var(--line); text-align:right;">${pct(v, total)}</td>
+  </tr>
+`).join("");
 
   const topConcepts = Array.from(byConcept.entries())
     .sort((a,b)=> b[1]-a[1])
@@ -736,7 +743,8 @@ function renderReport(label, start, end, rows){
         <thead>
           <tr>
             <th style="text-align:left;border-bottom:1px solid var(--line);padding:6px">Proveedor</th>
-            <th style="text-align:right;border-bottom:1px solid var(--line);padding:6px">Importe</th>
+<th style="text-align:right;border-bottom:1px solid var(--line);padding:6px">Importe</th>
+<th style="text-align:right;border-bottom:1px solid var(--line);padding:6px">% total</th>
           </tr>
         </thead>
 
@@ -747,9 +755,12 @@ function renderReport(label, start, end, rows){
         <tfoot>
           <tr>
             <td style="padding:8px;border-top:2px solid var(--line)"><strong>TOTAL</strong></td>
-            <td style="padding:8px;text-align:right;border-top:2px solid var(--line)">
-              <strong>${euro(total)}</strong>
-            </td>
+<td style="padding:8px;text-align:right;border-top:2px solid var(--line)">
+  <strong>${euro(total)}</strong>
+</td>
+<td style="padding:8px;text-align:right;border-top:2px solid var(--line)">
+  <strong>100,0%</strong>
+</td>
           </tr>
         </tfoot>
       </table>
