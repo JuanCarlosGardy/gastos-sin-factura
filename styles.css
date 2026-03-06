@@ -225,6 +225,9 @@ textarea{ resize:vertical; }
 
 /* IMPRESIÓN */
 @media print{
+  @page{
+  margin:8mm;
+}
   .report-highlight{
   border:1px solid #000;
   background:#fff;
@@ -362,7 +365,13 @@ textarea{ resize:vertical; }
   }
 
   .print-table th,
-  .print-table td{
+.print-table td{
+  padding:3px 5px !important;
+  border-bottom:1px solid #999 !important;
+  color:#000 !important;
+  font-size:10px !important;
+  line-height:1.2 !important;
+}
     color:#000 !important;
     padding:4px 6px !important;
     border-bottom:1px solid #999 !important;
@@ -459,15 +468,15 @@ textarea{ resize:vertical; }
 }
 
 .print-title{
-  font-size:20px;
+  font-size:16px;
   font-weight:700;
-  margin-bottom:4px;
+  margin-bottom:2px;
   color:#000;
 }
 
 .print-subtitle{
-  font-size:14px;
-  margin-bottom:6px;
+  font-size:12px;
+  margin-bottom:4px;
   color:#000;
 }
 
