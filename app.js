@@ -671,110 +671,90 @@ function renderReport(label, start, end, rows){
   lastReportRows = rows;
 
   let total = 0;
-  const byCat = new Map();
   const byProv = new Map();
   const byConcept = new Map();
 
   for(const r of rows){
     const a = Number(r.amount || 0);
     total += a;
-    byCat.set(r.category || "—", (byCat.get(r.category || "—") || 0) + a);
-    byProv.set(r.providerName || "—", (byProv.get(r.providerName || "—") || 0) + a);
-    byConcept.set(r.reference || "—", (byConcept.get(r.reference || "—") || 0) + a);
-  }
-lastReportLabel = label;
-lastReportTotal = total;
-lastReportProviders = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
-  const cats = Array.from(byCat.entries()).sort((a,b)=> b[1]-a[1]);
-  const provs = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
-  const topConcepts = Array.from(byConcept.entries()).sort((a,b)=> b[1]-a[1]).slice(0, 5);
-const topConceptsHtml = topConcepts.map(([k,v]) => `<li><strong>${k}</strong>: ${euro(v)}</li>`).join("");
 
-  const lines = rows.map(r => `
+    byProv.set(
+      r.providerName || "—",
+      (byProv.get(r.providerName || "—") || 0) + a
+    );
+
+    byConcept.set(
+      r.reference || "—",
+      (byConcept.get(r.reference || "—") || 0) + a
+    );
+  }
+
+  lastReportLabel = label;
+  lastReportTotal = total;
+  lastReportProviders = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
+
+  const provsHtml = lastReportProviders.map(([k,v]) => `
     <tr>
-      <td>${r.dateYmd || ""}</td>
-      <td>${r.number || ""}</td>
-      <td>${r.providerName || ""}</td>
-      <td>${r.category || ""}</td>
-      <td>${r.reference || ""}</td>
-      <td style="text-align:right">${euro(r.amount)}</td>
+      <td style="padding:8px 10px; border-bottom:1px solid var(--line);">${k}</td>
+      <td style="padding:8px 10px; border-bottom:1px solid var(--line); text-align:right;">${euro(v)}</td>
     </tr>
   `).join("");
 
-  const catsHtml = cats.map(([k,v])=> `<li><strong>${k}:</strong> ${euro(v)}</li>`).join("");
-const provsHtml = provs.map(([k,v])=> `
-<tr>
-<td>${k}</td>
-<td style="text-align:right">${euro(v)}</td>
-</tr>
-`).join("");
+  const topConcepts = Array.from(byConcept.entries())
+    .sort((a,b)=> b[1]-a[1])
+    .slice(0, 5);
 
-<div class="report-table-wrap">
-  <div class="report-table-title"><strong>Gastos agrupados por proveedor</strong></div>
+  const topConceptsHtml = topConcepts
+    .map(([k,v]) => `<li><strong>${k}</strong>: ${euro(v)}</li>`)
+    .join("");
 
-  <table class="report-table-main">
-    <thead>
-      <tr>
-        <th>Proveedor</th>
-        <th style="text-align:right">Importe</th>
-      </tr>
-    </thead>
+  const endDisplay = ymd(new Date(new Date(end).getTime() - 86400000));
 
-    <tbody>
-      ${provsHtml}
-    </tbody>
+  const reportHtml = `
+    <div class="item">
+      <div style="font-size:18px"><strong>GASTOS SIN FACTURA</strong></div>
+      <div class="muted" style="margin-top:2px">Informe interno – ${label}</div>
+      <div class="kv">
+        <span>Rango: ${start} a ${endDisplay}</span>
+        <span>Total gastos: <strong>${euro(total)}</strong></span>
+      </div>
+    </div>
 
-    <tfoot>
-      <tr>
-        <td><strong>TOTAL</strong></td>
-        <td style="text-align:right"><strong>${euro(total)}</strong></td>
-      </tr>
-    </tfoot>
-  </table>
-</div>
-<div class="report-highlight">
-  <div class="report-highlight-title">Conceptos con mayor gasto</div>
-  <ul class="report-highlight-list">
-    ${topConceptsHtml || "<li>—</li>"}
-  </ul>
-</div>
-</div>
+    <div class="report-highlight">
+      <div class="report-highlight-title">Conceptos con mayor gasto</div>
+      <ul class="report-highlight-list">
+        ${topConceptsHtml || "<li>—</li>"}
+      </ul>
+    </div>
 
-<div class="item" style="margin-top:10px">
+    <div class="item" style="margin-top:10px">
+      <div><strong>Gastos agrupados por proveedor</strong></div>
 
-<div><strong>Gastos agrupados por proveedor</strong></div>
+      <table style="width:100%; border-collapse:collapse; margin-top:10px">
+        <thead>
+          <tr>
+            <th style="text-align:left;border-bottom:1px solid var(--line);padding:6px">Proveedor</th>
+            <th style="text-align:right;border-bottom:1px solid var(--line);padding:6px">Importe</th>
+          </tr>
+        </thead>
 
-<table style="width:100%; border-collapse:collapse; margin-top:10px">
+        <tbody>
+          ${provsHtml}
+        </tbody>
 
-<thead>
-<tr>
-<th style="text-align:left;border-bottom:1px solid var(--line);padding:6px">
-Proveedor
-</th>
+        <tfoot>
+          <tr>
+            <td style="padding:8px;border-top:2px solid var(--line)"><strong>TOTAL</strong></td>
+            <td style="padding:8px;text-align:right;border-top:2px solid var(--line)">
+              <strong>${euro(total)}</strong>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  `;
 
-<th style="text-align:right;border-bottom:1px solid var(--line);padding:6px">
-Importe
-</th>
-</tr>
-</thead>
-
-<tbody>
-${provsHtml}
-</tbody>
-
-<tfoot>
-<tr>
-<td style="padding:8px;border-top:2px solid var(--line)"><strong>TOTAL</strong></td>
-<td style="padding:8px;text-align:right;border-top:2px solid var(--line)">
-<strong>${euro(total)}</strong>
-</td>
-</tr>
-</tfoot>
-
-</table>
-
-</div>
-`;
+  $("#reportArea").innerHTML = reportHtml;
 }
 
 $("#btnExportCsv").addEventListener("click", ()=>{
