@@ -673,18 +673,22 @@ function renderReport(label, start, end, rows){
   let total = 0;
   const byCat = new Map();
   const byProv = new Map();
+  const byConcept = new Map();
 
   for(const r of rows){
     const a = Number(r.amount || 0);
     total += a;
     byCat.set(r.category || "—", (byCat.get(r.category || "—") || 0) + a);
     byProv.set(r.providerName || "—", (byProv.get(r.providerName || "—") || 0) + a);
+    byConcept.set(r.reference || "—", (byConcept.get(r.reference || "—") || 0) + a);
   }
 lastReportLabel = label;
 lastReportTotal = total;
 lastReportProviders = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
   const cats = Array.from(byCat.entries()).sort((a,b)=> b[1]-a[1]);
   const provs = Array.from(byProv.entries()).sort((a,b)=> b[1]-a[1]);
+  const topConcepts = Array.from(byConcept.entries()).sort((a,b)=> b[1]-a[1]).slice(0, 5);
+const topConceptsHtml = topConcepts.map(([k,v]) => `<li><strong>${k}</strong>: ${euro(v)}</li>`).join("");
 
   const lines = rows.map(r => `
     <tr>
@@ -706,13 +710,18 @@ const provsHtml = provs.map(([k,v])=> `
 `).join("");
 
 $("#reportArea").innerHTML = `
-
 <div class="item">
 <div style="font-size:18px"><strong>GASTOS SIN FACTURA</strong></div>
 <div class="muted" style="margin-top:2px">Informe interno – ${label}</div>
 <div class="kv">
 <span>Rango: ${start} a ${ymd(new Date(new Date(end).getTime()-86400000))}</span>
 <span>Total gastos: <strong>${euro(total)}</strong></span>
+</div>
+<div class="item" style="margin-top:10px">
+  <div><strong>Conceptos con mayor gasto</strong></div>
+  <ul style="margin-top:10px; padding-left:18px">
+    ${topConceptsHtml || "<li>—</li>"}
+  </ul>
 </div>
 </div>
 
