@@ -250,6 +250,46 @@ textarea{ resize:vertical; }
   .card{ box-shadow:none; border: none; }
   input, select, textarea{ border:1px solid #ddd; color:#000; background:#fff; }
   .report{ border:1px solid #ddd; }
+    /* Forzar impresión limpia del informe */
+  #reportArea,
+  #reportArea .item,
+  .report-highlight{
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  #reportArea{
+    overflow: visible !important;
+  }
+
+  #reportArea table{
+    width:100% !important;
+    font-size:12px !important;
+  }
+
+  #reportArea th,
+  #reportArea td{
+    padding:6px !important;
+    color:#000 !important;
+  }
+
+  .report-highlight,
+  .report-highlight-title,
+  .report-highlight-list,
+  .report-highlight-list li,
+  .report-highlight-list strong{
+    color:#000 !important;
+    background:#fff !important;
+  }
+
+  .report-highlight{
+    border:1px solid #000 !important;
+    border-left:4px solid #000 !important;
+  }
+
+  .item{
+    overflow: visible !important;
+  }
 }
 .report-highlight{
   border:1px solid #d9d9d9;
@@ -257,14 +297,28 @@ textarea{ resize:vertical; }
   padding:12px 14px;
   margin-top:12px;
   background:#fafafa;
+  color:#111 !important;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .report-highlight-title{
-  font-weight:600;
-  margin-bottom:6px;
+  font-weight:700;
+  margin-bottom:8px;
+  color:#111 !important;
 }
 
 .report-highlight-list{
   margin:0;
   padding-left:18px;
+  color:#111 !important;
+}
+
+.report-highlight-list li{
+  color:#111 !important;
+  margin-bottom:4px;
+}
+
+.report-highlight-list strong{
+  color:#111 !important;
 }
