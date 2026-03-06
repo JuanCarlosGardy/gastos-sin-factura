@@ -717,9 +717,9 @@ $("#reportArea").innerHTML = `
 <span>Rango: ${start} a ${ymd(new Date(new Date(end).getTime()-86400000))}</span>
 <span>Total gastos: <strong>${euro(total)}</strong></span>
 </div>
-<div class="item" style="margin-top:10px">
-  <div><strong>Conceptos con mayor gasto</strong></div>
-  <ul style="margin-top:10px; padding-left:18px">
+<div class="report-highlight">
+  <div class="report-highlight-title">Conceptos con mayor gasto</div>
+  <ul class="report-highlight-list">
     ${topConceptsHtml || "<li>—</li>"}
   </ul>
 </div>
