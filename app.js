@@ -805,29 +805,45 @@ function renderReport(label, start, end, rows){
 `;
   $("#reportArea").innerHTML = reportHtml;
 }
-
+function formatMoney(value){
+  const num = Number(value ?? 0);
+  return num.toFixed(2).replace(".", ",");
+}
 $("#btnExportCsv").addEventListener("click", ()=>{
   if(!lastReportProviders || lastReportProviders.length === 0){
     return;
   }
 
-  const header = ["Proveedor","Importe"];
+  const header = ["Proveedor","Importe (€)"];
   const rows = lastReportProviders.map(([prov, total])=> ([
-    prov,
-    String(total ?? 0)
-  ].map(csvEscape).join(";")));
+  prov,
+  formatMoney(total)
+].map(csvEscape).join(";")));
 
   // Añadimos cabecera informativa arriba (opcional pero útil)
   const info = [
     `${csvEscape(lastReportLabel || "Informe")}`,
-    `TOTAL;${csvEscape(String(lastReportTotal ?? 0))}`,
+    `TOTAL;${csvEscape(formatMoney(lastReportTotal))} €`,
     ""
   ].join("\n");
 
   const content = info + header.join(";") + "\n" + rows.join("\n");
   downloadText("informe_gastos_sin_factura_por_proveedor.csv", content);
 });
+const btnExportPdf = $("#btnExportPdf");
 
+if (btnExportPdf) {
+  btnExportPdf.addEventListener("click", () => {
+    const reportContent = $("#reportArea");
+
+    if (!reportContent || !reportContent.innerHTML.trim()) {
+      alert("Primero debes generar el informe.");
+      return;
+    }
+
+    window.print();
+  });
+}
 // =============================
 // 13) ARRANQUE
 // =============================
