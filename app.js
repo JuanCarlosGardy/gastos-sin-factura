@@ -827,7 +827,16 @@ $("#btnExportCsv").addEventListener("click", ()=>{
   const content = info + header.join(";") + "\n" + rows.join("\n");
   downloadText("informe_gastos_sin_factura_por_proveedor.csv", content);
 });
+$("#btnExportPdf").addEventListener("click", ()=>{
+  const reportContent = document.getElementById("reportArea");
 
+  if(!reportContent || !reportContent.innerHTML.trim()){
+    alert("Primero debes generar el informe.");
+    return;
+  }
+
+  window.print();
+});
 // =============================
 // 13) ARRANQUE
 // =============================
